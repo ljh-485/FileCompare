@@ -33,7 +33,7 @@
             lvwLeftDir = new ListView();
             panel2 = new Panel();
             btnLeftDir = new Button();
-            tetLeftDir = new TextBox();
+            txtLeftDir = new TextBox();
             panel1 = new Panel();
             btnCopyFromLeft = new Button();
             lblAppName = new Label();
@@ -100,7 +100,7 @@
             // panel2
             // 
             panel2.Controls.Add(btnLeftDir);
-            panel2.Controls.Add(tetLeftDir);
+            panel2.Controls.Add(txtLeftDir);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 159);
             panel2.Name = "panel2";
@@ -116,14 +116,15 @@
             btnLeftDir.TabIndex = 1;
             btnLeftDir.Text = "폴더선택";
             btnLeftDir.UseVisualStyleBackColor = true;
+            btnLeftDir.Click += btnLeftDir_Click;
             // 
-            // tetLeftDir
+            // txtLeftDir
             // 
-            tetLeftDir.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tetLeftDir.Location = new Point(18, 47);
-            tetLeftDir.Name = "tetLeftDir";
-            tetLeftDir.Size = new Size(523, 39);
-            tetLeftDir.TabIndex = 0;
+            txtLeftDir.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            txtLeftDir.Location = new Point(18, 47);
+            txtLeftDir.Name = "txtLeftDir";
+            txtLeftDir.Size = new Size(523, 39);
+            txtLeftDir.TabIndex = 0;
             // 
             // panel1
             // 
@@ -201,6 +202,7 @@
             btnRightDir.TabIndex = 2;
             btnRightDir.Text = "폴더선택";
             btnRightDir.UseVisualStyleBackColor = true;
+            btnRightDir.Click += btnRightDir_Click;
             // 
             // panel4
             // 
@@ -257,7 +259,7 @@
         private Panel panel4;
         private ListView lvwLeftDir;
         private Button btnLeftDir;
-        private TextBox tetLeftDir;
+        private TextBox txtLeftDir;
         private Label lblAppName;
         private TextBox txtRightDir;
         private Button btnRightDir;
