@@ -6,14 +6,23 @@
 - 사용한 플랫폼:
   - C#, .NET Windows Forms, Visual Studio, GitHub
 - 사용한 컨트롤:
-  - TextBox, Button, Label
+  - TextBox, Button, Label, ListBox, ListView, Panel, SplitContainer
 - 사용한 기술과 구현한 기능
+  - 폴더 선택 기능
+  - 파일 리스트 기능
+  - 파일 비교 기능
+  - 파일 복사 기능
+  - 하위 폴더 처리 기능
+  - 색상 구분 표시 기능
+  
   
 
 ## 실행 화면 (과제1)
 -  과제1 코드의 실행 스크린샷
 
 ![과제1 실행 화면](img/파컴1-1.png)
+![과제1 실행 화면](img/파컴1-2.png)
+![과제1 실행 화면](img/파컴1-3.png)
 
 
 - 과제 내용
@@ -25,6 +34,10 @@
     - ▶다시 주문할 수 있도록 초기화합니다.
 
 - 구현 내용과 기능 설명
+  - 폴더 선택과 파일 리스트를 위한 SplitContainer 사용, 각 패널에 ListBox와 Button 배치
+  - 폴더 선택 버튼과 파일 리스트가 명확하게 구분되도록 배치
+  - SplitContainer의 Panel1과 Panel2에 각각 ListBox와 Button을 배치하여 폴더 선택과 파일 리스트 기능을 명확하게 구분
+  - SplitContainer를 사용하여 하나의 화면을 두 부분으로 사용할 수 있게 함
   
 
 ## 실행 화면 (과제2)
