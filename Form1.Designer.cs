@@ -44,6 +44,12 @@
             btnRightDir = new Button();
             panel4 = new Panel();
             btnCopyFromRight = new Button();
+            name_Left = new ColumnHeader();
+            size_Left = new ColumnHeader();
+            date_Left = new ColumnHeader();
+            name_Right = new ColumnHeader();
+            size_Right = new ColumnHeader();
+            date_Right = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -91,11 +97,15 @@
             // lvwLeftDir
             // 
             lvwLeftDir.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvwLeftDir.Columns.AddRange(new ColumnHeader[] { name_Left, size_Left, date_Left });
+            lvwLeftDir.FullRowSelect = true;
+            lvwLeftDir.GridLines = true;
             lvwLeftDir.Location = new Point(3, 6);
             lvwLeftDir.Name = "lvwLeftDir";
             lvwLeftDir.Size = new Size(736, 471);
             lvwLeftDir.TabIndex = 0;
             lvwLeftDir.UseCompatibleStateImageBehavior = false;
+            lvwLeftDir.View = View.Details;
             // 
             // panel2
             // 
@@ -148,12 +158,13 @@
             // 
             // lblAppName
             // 
+            lblAppName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lblAppName.AutoSize = true;
-            lblAppName.Font = new Font("맑은 고딕", 19.875F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            lblAppName.Font = new Font("맑은 고딕", 16.125F, FontStyle.Bold, GraphicsUnit.Point, 129);
             lblAppName.ForeColor = Color.Blue;
             lblAppName.Location = new Point(28, 31);
             lblAppName.Name = "lblAppName";
-            lblAppName.Size = new Size(365, 71);
+            lblAppName.Size = new Size(297, 59);
             lblAppName.TabIndex = 0;
             lblAppName.Text = "FIle Compare";
             // 
@@ -169,11 +180,15 @@
             // lvwRightDir
             // 
             lvwRightDir.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvwRightDir.Columns.AddRange(new ColumnHeader[] { name_Right, size_Right, date_Right });
+            lvwRightDir.FullRowSelect = true;
+            lvwRightDir.GridLines = true;
             lvwRightDir.Location = new Point(6, 6);
             lvwRightDir.Name = "lvwRightDir";
             lvwRightDir.Size = new Size(736, 471);
             lvwRightDir.TabIndex = 1;
             lvwRightDir.UseCompatibleStateImageBehavior = false;
+            lvwRightDir.View = View.Details;
             // 
             // panel5
             // 
@@ -223,6 +238,36 @@
             btnCopyFromRight.Text = "<<<";
             btnCopyFromRight.UseVisualStyleBackColor = true;
             // 
+            // name_Left
+            // 
+            name_Left.Text = "이름";
+            name_Left.Width = 300;
+            // 
+            // size_Left
+            // 
+            size_Left.Text = "크기";
+            size_Left.Width = 100;
+            // 
+            // date_Left
+            // 
+            date_Left.Text = "수정일";
+            date_Left.Width = 160;
+            // 
+            // name_Right
+            // 
+            name_Right.Text = "이름";
+            name_Right.Width = 300;
+            // 
+            // size_Right
+            // 
+            size_Right.Text = "크기";
+            size_Right.Width = 100;
+            // 
+            // date_Right
+            // 
+            date_Right.Text = "수정일";
+            date_Right.Width = 160;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(14F, 32F);
@@ -266,5 +311,11 @@
         private ListView lvwRightDir;
         private Button btnCopyFromLeft;
         private Button btnCopyFromRight;
+        private ColumnHeader name_Left;
+        private ColumnHeader size_Left;
+        private ColumnHeader date_Left;
+        private ColumnHeader name_Right;
+        private ColumnHeader size_Right;
+        private ColumnHeader date_Right;
     }
 }
