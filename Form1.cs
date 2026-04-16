@@ -100,9 +100,9 @@ namespace FileCompare
                 }
 
                 // 양쪽 폴더가 모두 선택되어 있으면 비교 수행
-                if (!string.IsNullOrWhiteSpace(txtLeftDir.Text) && 
+                if (!string.IsNullOrWhiteSpace(txtLeftDir.Text) &&
                     !string.IsNullOrWhiteSpace(txtRightDir.Text) &&
-                    Directory.Exists(txtLeftDir.Text) && 
+                    Directory.Exists(txtLeftDir.Text) &&
                     Directory.Exists(txtRightDir.Text))
                 {
                     CompareAndColorize();
@@ -189,14 +189,14 @@ namespace FileCompare
                         else
                         {
                             // 내용이 다름 - 날짜 비교
-                            if (currentFile.LastWriteTime > otherFile.LastWriteTime)
+                            if (currentFile.LastWriteTime < otherFile.LastWriteTime)
                             {
-                                // 현재 파일이 더 최신 (New) - 빨간색
+                                // 현재 파일이 더 오래됨 (날짜가 빠름, Old) - 빨간색
                                 item.ForeColor = Color.Red;
                             }
                             else
                             {
-                                // 현재 파일이 더 오래됨 (Old) - 회색
+                                // 현재 파일이 더 최신 (날짜가 느림, New) - 회색
                                 item.ForeColor = Color.Gray;
                             }
                         }
@@ -236,11 +236,30 @@ namespace FileCompare
                 return;
             }
 
+            // 대상 ListView 찾기
+            ListView targetListView = (sourceListView == lvwLeftDir) ? lvwRightDir : lvwLeftDir;
+
             foreach (ListViewItem item in sourceListView.SelectedItems)
             {
                 string itemName = item.Text;
                 string sourcePath = Path.Combine(sourceDir, itemName);
                 string targetPath = Path.Combine(targetDir, itemName);
+
+                // 회색(최신) 파일을 빨간색(오래됨) 파일로 복사하려는 경우 차단
+                if (item.ForeColor == Color.Gray)
+                {
+                    // 대상 ListView에서 같은 이름의 파일 찾기
+                    ListViewItem targetItem = FindItemByName(targetListView, itemName);
+                    if (targetItem != null && targetItem.ForeColor == Color.Red)
+                    {
+                        MessageBox.Show(this, 
+                            $"'{itemName}'는 최신 파일(회색)입니다.\n오래된 파일(빨간색)로 복사할 수 없습니다.", 
+                            "복사 차단",
+                            MessageBoxButtons.OK, 
+                            MessageBoxIcon.Warning);
+                        continue;
+                    }
+                }
 
                 try
                 {
@@ -290,6 +309,18 @@ namespace FileCompare
 
             MessageBox.Show(this, "복사가 완료되었습니다.", "완료",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private ListViewItem FindItemByName(ListView lv, string name)
+        {
+            foreach (ListViewItem item in lv.Items)
+            {
+                if (item.Text == name)
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         private bool CompareFileContents(string file1Path, string file2Path)
@@ -352,6 +383,10 @@ namespace FileCompare
             }
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

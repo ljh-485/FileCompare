@@ -31,6 +31,9 @@
             splitContainer1 = new SplitContainer();
             panel3 = new Panel();
             lvwLeftDir = new ListView();
+            name_Left = new ColumnHeader();
+            size_Left = new ColumnHeader();
+            date_Left = new ColumnHeader();
             panel2 = new Panel();
             btnLeftDir = new Button();
             txtLeftDir = new TextBox();
@@ -39,17 +42,14 @@
             lblAppName = new Label();
             panel6 = new Panel();
             lvwRightDir = new ListView();
+            name_Right = new ColumnHeader();
+            size_Right = new ColumnHeader();
+            date_Right = new ColumnHeader();
             panel5 = new Panel();
             txtRightDir = new TextBox();
             btnRightDir = new Button();
             panel4 = new Panel();
             btnCopyFromRight = new Button();
-            name_Left = new ColumnHeader();
-            size_Left = new ColumnHeader();
-            date_Left = new ColumnHeader();
-            name_Right = new ColumnHeader();
-            size_Right = new ColumnHeader();
-            date_Right = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -106,6 +106,21 @@
             lvwLeftDir.TabIndex = 0;
             lvwLeftDir.UseCompatibleStateImageBehavior = false;
             lvwLeftDir.View = View.Details;
+            // 
+            // name_Left
+            // 
+            name_Left.Text = "이름";
+            name_Left.Width = 300;
+            // 
+            // size_Left
+            // 
+            size_Left.Text = "크기";
+            size_Left.Width = 100;
+            // 
+            // date_Left
+            // 
+            date_Left.Text = "수정일";
+            date_Left.Width = 160;
             // 
             // panel2
             // 
@@ -191,6 +206,21 @@
             lvwRightDir.UseCompatibleStateImageBehavior = false;
             lvwRightDir.View = View.Details;
             // 
+            // name_Right
+            // 
+            name_Right.Text = "이름";
+            name_Right.Width = 300;
+            // 
+            // size_Right
+            // 
+            size_Right.Text = "크기";
+            size_Right.Width = 100;
+            // 
+            // date_Right
+            // 
+            date_Right.Text = "수정일";
+            date_Right.Width = 160;
+            // 
             // panel5
             // 
             panel5.Controls.Add(txtRightDir);
@@ -240,36 +270,6 @@
             btnCopyFromRight.UseVisualStyleBackColor = true;
             btnCopyFromRight.Click += btnCopyFromRight_Click;
             // 
-            // name_Left
-            // 
-            name_Left.Text = "이름";
-            name_Left.Width = 300;
-            // 
-            // size_Left
-            // 
-            size_Left.Text = "크기";
-            size_Left.Width = 100;
-            // 
-            // date_Left
-            // 
-            date_Left.Text = "수정일";
-            date_Left.Width = 160;
-            // 
-            // name_Right
-            // 
-            name_Right.Text = "이름";
-            name_Right.Width = 300;
-            // 
-            // size_Right
-            // 
-            size_Right.Text = "크기";
-            size_Right.Width = 100;
-            // 
-            // date_Right
-            // 
-            date_Right.Text = "수정일";
-            date_Right.Width = 160;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(14F, 32F);
@@ -279,6 +279,7 @@
             Name = "Form1";
             Padding = new Padding(5);
             Text = "File Compare v1.0";
+            Load += Form1_Load;
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
