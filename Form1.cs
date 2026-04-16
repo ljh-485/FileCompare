@@ -189,24 +189,127 @@ namespace FileCompare
                         else
                         {
                             // 내용이 다름 - 날짜 비교
-                            if (currentFile.LastWriteTime < otherFile.LastWriteTime)
+                            if (currentFile.LastWriteTime > otherFile.LastWriteTime)
                             {
-                                // 현재 파일이 더 오래됨 (날짜가 빠름, Old) - 빨간색
+                                // 현재 파일이 더 최신 (New) - 빨간색
                                 item.ForeColor = Color.Red;
                             }
                             else
                             {
-                                // 현재 파일이 더 최신 (날짜가 느림, New) - 회색
+                                // 현재 파일이 더 오래됨 (Old) - 회색
                                 item.ForeColor = Color.Gray;
                             }
                         }
                     }
                     else if (isCurrentDir && otherIsDir)
                     {
-                        // 둘 다 폴더 - 검은색 (폴더는 내용 비교 안함)
-                        item.ForeColor = Color.Black;
+                        // 둘 다 폴더 - 폴더 내용 비교
+                        var comparisonResult = CompareFolderContents(currentPath, otherPath);
+
+                        if (comparisonResult == FolderComparisonResult.Identical)
+                        {
+                            // 폴더 내용이 완전히 동일 - 초록색
+                            item.ForeColor = Color.Green;
+                        }
+                        else if (comparisonResult == FolderComparisonResult.CurrentNewer)
+                        {
+                            // 현재 폴더가 더 최신 - 파란색
+                            item.ForeColor = Color.Blue;
+                        }
+                        else if (comparisonResult == FolderComparisonResult.CurrentOlder)
+                        {
+                            // 현재 폴더가 더 오래됨 - 핑크색
+                            item.ForeColor = Color.Pink;
+                        }
+                        else
+                        {
+                            // 폴더 내용이 다름 (구조가 다름/날짜 섞임) - 파란색
+                            item.ForeColor = Color.Blue;
+                        }
                     }
                 }
+            }
+        }
+
+        private enum FolderComparisonResult
+        {
+            Identical,      // 완전히 동일
+            CurrentNewer,   // 현재가 더 최신
+            CurrentOlder,   // 현재가 더 오래됨
+            Different       // 다름
+        }
+
+        private FolderComparisonResult CompareFolderContents(string folder1, string folder2)
+        {
+            try
+            {
+                // 두 폴더의 모든 파일과 하위 폴더 목록 가져오기
+                var files1 = Directory.GetFiles(folder1, "*", SearchOption.AllDirectories)
+                    .Select(f => f.Substring(folder1.Length + 1)).OrderBy(f => f).ToList();
+                var files2 = Directory.GetFiles(folder2, "*", SearchOption.AllDirectories)
+                    .Select(f => f.Substring(folder2.Length + 1)).OrderBy(f => f).ToList();
+
+                var dirs1 = Directory.GetDirectories(folder1, "*", SearchOption.AllDirectories)
+                    .Select(d => d.Substring(folder1.Length + 1)).OrderBy(d => d).ToList();
+                var dirs2 = Directory.GetDirectories(folder2, "*", SearchOption.AllDirectories)
+                    .Select(d => d.Substring(folder2.Length + 1)).OrderBy(d => d).ToList();
+
+                // 구조가 다르면 Different
+                if (!files1.SequenceEqual(files2) || !dirs1.SequenceEqual(dirs2))
+                {
+                    return FolderComparisonResult.Different;
+                }
+
+                // 모든 파일 내용 비교
+                bool hasNewerFiles = false;
+                bool hasOlderFiles = false;
+                bool allIdentical = true;
+
+                foreach (var relativeFile in files1)
+                {
+                    string file1Path = Path.Combine(folder1, relativeFile);
+                    string file2Path = Path.Combine(folder2, relativeFile);
+
+                    FileInfo fi1 = new FileInfo(file1Path);
+                    FileInfo fi2 = new FileInfo(file2Path);
+
+                    // 파일 크기가 다르거나 내용이 다르면
+                    bool filesIdentical = false;
+                    if (fi1.Length == fi2.Length)
+                    {
+                        filesIdentical = CompareFileContents(file1Path, file2Path);
+                    }
+
+                    if (!filesIdentical)
+                    {
+                        allIdentical = false;
+                        // 날짜 비교
+                        if (fi1.LastWriteTime > fi2.LastWriteTime)
+                            hasNewerFiles = true;
+                        else if (fi1.LastWriteTime < fi2.LastWriteTime)
+                            hasOlderFiles = true;
+                    }
+                }
+
+                // 모든 파일이 동일
+                if (allIdentical)
+                    return FolderComparisonResult.Identical;
+
+                // 날짜가 섞여 있으면 Different
+                if (hasNewerFiles && hasOlderFiles)
+                    return FolderComparisonResult.Different;
+
+                // 전부 더 최신이거나 전부 더 오래됨
+                if (hasNewerFiles)
+                    return FolderComparisonResult.CurrentNewer;
+                if (hasOlderFiles)
+                    return FolderComparisonResult.CurrentOlder;
+
+                return FolderComparisonResult.Identical;
+            }
+            catch
+            {
+                return FolderComparisonResult.Different;
             }
         }
 
@@ -245,15 +348,17 @@ namespace FileCompare
                 string sourcePath = Path.Combine(sourceDir, itemName);
                 string targetPath = Path.Combine(targetDir, itemName);
 
-                // 회색(최신) 파일을 빨간색(오래됨) 파일로 복사하려는 경우 차단
+                // 회색(오래됨) 파일/폴더를 빨간색(최신) 파일/폴더로 복사하려는 경우 차단
                 if (item.ForeColor == Color.Gray)
                 {
-                    // 대상 ListView에서 같은 이름의 파일 찾기
+                    // 대상 ListView에서 같은 이름의 항목 찾기
                     ListViewItem targetItem = FindItemByName(targetListView, itemName);
                     if (targetItem != null && targetItem.ForeColor == Color.Red)
                     {
+                        bool isDirectory = item.SubItems[1].Text == "<DIR>";
+                        string itemType = isDirectory ? "폴더" : "파일";
                         MessageBox.Show(this, 
-                            $"'{itemName}'는 최신 파일(회색)입니다.\n오래된 파일(빨간색)로 복사할 수 없습니다.", 
+                            $"'{itemName}'는 오래된 {itemType}(회색)입니다.\n최신 {itemType}(빨간색)로 복사할 수 없습니다.", 
                             "복사 차단",
                             MessageBoxButtons.OK, 
                             MessageBoxIcon.Warning);
